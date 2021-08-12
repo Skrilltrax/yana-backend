@@ -1,7 +1,8 @@
-val ktorVersion: String by project
-val kotlinVersion: String by project
-val logbackVersion: String by project
 val exposedVersion: String by project
+val koinVersion: String by project
+val kotlinVersion: String by project
+val ktorVersion: String by project
+val logbackVersion: String by project
 
 plugins {
     application
@@ -12,6 +13,7 @@ group = "dev.skrilltrax"
 version = "0.0.1"
 application {
     mainClass.set("dev.skrilltrax.ApplicationKt")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true")
 }
 
 repositories {
@@ -31,6 +33,10 @@ dependencies {
 
     // Dotenv
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
+
+    // Koin
+    implementation("io.insert-koin:koin-ktor:$koinVersion")
+    implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
