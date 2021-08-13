@@ -7,6 +7,7 @@ val logbackVersion: String by project
 plugins {
     application
     kotlin("jvm") version "1.5.21"
+    kotlin("plugin.serialization") version "1.5.21"
 }
 
 group = "dev.skrilltrax"
@@ -40,6 +41,14 @@ dependencies {
 
     // Bcrypt
     implementation("at.favre.lib:bcrypt:0.9.0")
+
+    // Auth
+    implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
+
+    // Serialization
+    implementation("io.ktor:ktor-serialization:$ktorVersion")
+
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
