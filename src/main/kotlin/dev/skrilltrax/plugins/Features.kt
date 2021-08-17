@@ -36,7 +36,7 @@ fun Application.installFeatures() {
     val sec = dotenv["JWT_SECRET"]
 
     install(Authentication) {
-        jwt("auth-user") {
+        jwt("auth-jwt") {
             verifier(
                 JWT.require(Algorithm.HMAC256(sec))
                     .withAudience(aud)

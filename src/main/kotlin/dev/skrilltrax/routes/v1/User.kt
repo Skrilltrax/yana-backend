@@ -1,6 +1,6 @@
 package dev.skrilltrax.routes.v1
 
-import dev.skrilltrax.db.model.UserRequest
+import dev.skrilltrax.db.model.UserModel
 import dev.skrilltrax.exception.UserException
 import dev.skrilltrax.services.UserService
 import io.ktor.application.*
@@ -12,7 +12,7 @@ private fun Route.login(userService: UserService) {
     route("login") {
         post {
             try {
-                val user = call.receive<UserRequest>()
+                val user = call.receive<UserModel>()
                 val token = userService.authenticateUser(user.username, user.password)
                 call.respond(hashMapOf("token" to token))
             } catch (exception: UserException) {
@@ -26,7 +26,7 @@ private fun Route.signup(userService: UserService) {
     route("signup") {
         post {
             try {
-                val user = call.receive<UserRequest>()
+                val user = call.receive<UserModel>()
                 val token = userService.createUser(user.username, user.password)
                 call.respond(hashMapOf("token" to token))
             } catch (exception: UserException) {

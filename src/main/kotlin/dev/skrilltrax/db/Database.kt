@@ -1,7 +1,7 @@
 package dev.skrilltrax.db
 
-import dev.skrilltrax.db.tables.Notes
-import dev.skrilltrax.db.tables.Users
+import dev.skrilltrax.db.tables.NotesTable
+import dev.skrilltrax.db.tables.UsersTable
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +22,7 @@ fun initializeDatabase(database: Database) {
     transaction(database) {
         addLogger(StdOutSqlLogger)
 
-        SchemaUtils.create(Users, Notes)
+        SchemaUtils.create(UsersTable, NotesTable)
     }
 }
 
