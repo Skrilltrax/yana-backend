@@ -1,3 +1,5 @@
 package dev.skrilltrax.exception
 
-open class BaseException(error: String, errorCode: Int, cause: Throwable? = null) : Exception(error, cause)
+import io.ktor.http.*
+
+open class BaseException(val error: String, val errorCode: HttpStatusCode, cause: Throwable? = null) : Exception(error, cause)

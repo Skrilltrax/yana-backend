@@ -1,17 +1,23 @@
 package dev.skrilltrax.routes.v1
 
 import dev.skrilltrax.db.model.UserRequest
-import dev.skrilltrax.exception.BaseException
+import dev.skrilltrax.exception.UserException
 import dev.skrilltrax.services.UserService
 import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-private fun Route.login() {
+private fun Route.login(userService: UserService) {
     route("login") {
-        get {
-            call.respondText("Hello World!")
+        post {
+            try {
+                val user = call.receive<UserRequest>()
+                val token = userService.authenticateUser(user.username, user.password)
+                call.respond(hashMapOf("token" to token))
+            } catch (exception: UserException) {
+                call.respond(exception.errorCode, exception.error)
+            }
         }
     }
 }
@@ -19,21 +25,20 @@ private fun Route.login() {
 private fun Route.signup(userService: UserService) {
     route("signup") {
         post {
-            val user = call.receive<UserRequest>()
             try {
+                val user = call.receive<UserRequest>()
                 val token = userService.createUser(user.username, user.password)
-            } catch (exception: BaseException) {
-                respond
+                call.respond(hashMapOf("token" to token))
+            } catch (exception: UserException) {
+                call.respond(exception.errorCode, exception.error)
             }
-
-            call.respond(hashMapOf("token" to token))
         }
     }
 }
 
 fun Route.user(userService: UserService) {
     route("/user") {
-        login()
+        login(userService)
         signup(userService)
     }
 }
