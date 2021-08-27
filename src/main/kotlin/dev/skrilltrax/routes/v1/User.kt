@@ -2,6 +2,7 @@ package dev.skrilltrax.routes.v1
 
 import dev.skrilltrax.db.model.UserModel
 import dev.skrilltrax.exception.UserException
+import dev.skrilltrax.exception.ValidationException
 import dev.skrilltrax.services.UserService
 import io.ktor.application.*
 import io.ktor.request.*
@@ -30,6 +31,8 @@ private fun Route.signup(userService: UserService) {
                 val token = userService.createUser(user.username, user.password)
                 call.respond(hashMapOf("token" to token))
             } catch (exception: UserException) {
+                call.respond(exception.errorCode, exception.error)
+            } catch (exception: ValidationException) {
                 call.respond(exception.errorCode, exception.error)
             }
         }

@@ -5,6 +5,7 @@ import dev.skrilltrax.db.dao.UserDao
 import dev.skrilltrax.db.tables.UsersTable
 import dev.skrilltrax.exception.UserException
 import dev.skrilltrax.utils.createToken
+import dev.skrilltrax.validators.PasswordValidator
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,7 +13,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class UserService(private val database: Database, private val dotenv: Dotenv) {
+class UserService(private val database: Database, private val dotenv: Dotenv, private val passwordValidator: PasswordValidator) {
 
     suspend fun authenticateUser(username: String, password: String): String = withContext(Dispatchers.IO) {
         if (!UsersTable.exists(username)) throw UserException.UserDoesNotExistException
@@ -27,6 +28,8 @@ class UserService(private val database: Database, private val dotenv: Dotenv) {
 
     suspend fun createUser(user: String, password: String): String = withContext(Dispatchers.IO) {
         if (UsersTable.exists(user)) throw UserException.UserExistsException
+
+        passwordValidator.validatePassword(password)
 
         val hashedPassword = BCrypt.withDefaults().hash(HASH_ROUNDS, password.toCharArray()).decodeToString()
 
